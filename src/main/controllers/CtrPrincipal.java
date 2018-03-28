@@ -1,4 +1,8 @@
+package main.controllers;
+
 import java.awt.EventQueue;
+
+import main.views.FrmPrincipal;
 
 public class CtrPrincipal {
 
