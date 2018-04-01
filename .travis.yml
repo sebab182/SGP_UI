@@ -1,9 +1,12 @@
 language: java
+script:
+  # This command generates a release.zip file.
+  - make dist
 deploy:
   provider: releases
-  skip-cleanup: true
   api_key: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
-  file:"SGP_UI 1.0-SNAPSHOT.jar"
+  file:"release.zip"
+  skip-cleanup: true
   keep-history: true
   on:
     branch: master
