@@ -1,11 +1,9 @@
 language: java
-script:
-  # This command generates a release.zip file.
-  - make dist
+addons:
+  artifacts: true
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
-  file:"release.zip"
   skip-cleanup: true
   keep-history: true
   on:

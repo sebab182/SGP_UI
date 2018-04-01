@@ -8,7 +8,7 @@ public class FrmPrincipal {
 	private JFrame frame;
 
 	/**
-	 * Launch the application.
+	 * Launch the application. --- se agrega comentario
 	 */
 
 
