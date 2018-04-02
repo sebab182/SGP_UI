@@ -1,9 +1,9 @@
 language: java
 deploy:
   provider: s3
-  access_key_id: $ARTIFACTS_KEY
-  secret_access_key: $ARTIFACTS_SECRET
-  bucket: $S3_BUCKET
+  access_key_id: '$ARTIFACTS_KEY'
+  secret_access_key: '$ARTIFACTS_SECRET'
+  bucket: '$S3_BUCKET'
   skip_cleanup: true
   acl: public_read
  on:
