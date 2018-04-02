@@ -1,6 +1,8 @@
 language: java
 addons:
   artifacts: true
+  s3_region: "sa-east-1" # defaults to "us-east-1"
+  debug: true
 deploy:
   provider: releases
   api_key: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
