@@ -1,13 +1,36 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>SGP</groupId>
   <artifactId>SGP_UI</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>SGP_UI</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     
   </dependencies>
+  
+  <build>
+	  <extensions>
+		  <extension>
+			<groupId>org.kuali.maven.wagons</groupId>
+			<artifactId>maven-s3-wagon</artifactId>
+		  </extension>
+	  </extensions>
+  </build>
+  
+  <distributionManagement>
+	 <site>
+	  <id>ungs.sgp</id>
+	  <url>s3://ungs.sgp/site</url>
+	 </site>
+	 <repository>
+	  <id>s3.release</id>
+	  <url>s3://ungs.sgp/release</url>
+	 </repository>
+	 <snapshotRepository>
+	  <id>s3.snapshot</id>
+	  <url>s3://ungs.sgp/snapshot</url>
+	 </snapshotRepository>
+  </distributionManagement>
 </project>
