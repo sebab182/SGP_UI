@@ -1,12 +1,10 @@
 language: java
-addons:
-  artifacts: true
-  s3_region: "sa-east-1" # defaults to "us-east-1"
-  debug: true
 deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
-  skip-cleanup: true
-  keep-history: true
-  on:
+  provider: s3
+  access_key_id: $ARTIFACTS_KEY
+  secret_access_key: $ARTIFACTS_SECRET
+  bucket: $S3_BUCKET
+  skip_cleanup: true
+  acl: public_read
+ on:
     branch: master
