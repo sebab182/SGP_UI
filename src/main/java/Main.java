@@ -5,17 +5,16 @@ public class Main {
 		//Creo el modelo
 		Modelo m = new Modelo();
 		
-		//Creo las vistas
-		View1 v1 = new View1(m);
-		View2 v2 = new View2(m);
+		//Creo la vista
+		FrmPrincipal frmP = new FrmPrincipal(m);
+		CtrPrincipal ctrP = new CtrPrincipal(m,frmP);
 		
 		//Agrego los observadores al modelo
-		m.atachObserver(v1);
-		m.atachObserver(v2);
+		//m.addObserver(ctrP);
+		//m.addObserver(frmP);
 		
 		//Inicio ventanas
-		v1.setVisible(true);
-		v2.setVisible(true);
+		frmP.setVisible(true);;
 	}
 
 }
