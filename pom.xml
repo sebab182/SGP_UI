@@ -7,7 +7,12 @@
   <name>SGP_UI</name>
   <url>https://github.com/sebab182/SGP_UI</url>
   <dependencies>
-    
+   
+    		<dependency>
+    	 <groupId>javax.mail</groupId>
+    	 <artifactId>mail</artifactId>
+    	 <version>1.4</version>
+		</dependency>
   </dependencies>
   
   <properties>

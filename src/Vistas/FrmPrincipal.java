@@ -27,7 +27,7 @@ public class FrmPrincipal extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 	private Modelo m;
 	private JPanel contentPane;
-	private	JButton btn;
+	private	JButton btnResolverPedidos;
 	private JButton btnExportar;
 	private JButton btnSalir;
 	private JButton btnPedidos;
@@ -62,9 +62,9 @@ public class FrmPrincipal extends JFrame implements Observer {
 		scrollPane.setBounds(10, 85, 605, 248);
 		contentPane.add(scrollPane);
 		
-		btn = new JButton("Bot\u00F3n");
-		btn.setBounds(229, 344, 89, 23);
-		//contentPane.add(btn);
+		btnResolverPedidos = new JButton("Resolver pedidos");
+		btnResolverPedidos.setBounds(199, 344, 119, 23);
+		contentPane.add(btnResolverPedidos);
 		
 		JLabel lblNewLabel = new JLabel("Sistema de Gesti\u00F3n de Piezas");
 		lblNewLabel.setFont(new Font("Segoe UI Light", Font.PLAIN, 24));
@@ -104,11 +104,11 @@ public class FrmPrincipal extends JFrame implements Observer {
 	}
 	
 	public JButton getBtn() {
-		return btn;
+		return btnResolverPedidos;
 	}
 
 	public void setBtn(JButton btn) {
-		this.btn = btn;
+		this.btnResolverPedidos = btn;
 	}
 	
 	public JButton getBtnExportar() {
