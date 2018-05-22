@@ -8,17 +8,14 @@ import Vistas.FrmPedidos;
 
 	public class CtrPedidos implements ActionListener{
 		private FrmPedidos p;
-	
-	
+		
 	public CtrPedidos(FrmPedidos fp) {
 		this.p = fp;
 		agregarActionsListener();		
 	}
 	
-	
 	private void agregarActionsListener() {
 		p.getBtnCerrar().addActionListener(this);
-		
 	}
 	
 	
@@ -27,6 +24,5 @@ import Vistas.FrmPedidos;
 		if(e.getSource()==p.getBtnCerrar()) {
 			p.dispose();
 		}
-		
 	}
 	}

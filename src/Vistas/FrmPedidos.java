@@ -87,7 +87,7 @@ public class FrmPedidos extends JDialog {
 	}
 	
 	public void cargarPedidos() {
-		Map<Tipo, Double> aux = m.cargarPedidos();
+		Map<Tipo, Double> aux = m.cargarPedidosAgrupados();
 		for(Entry<Tipo, Double> entryAux: aux.entrySet()) {
 			tableModel.addRow(new Object[]{entryAux.getKey(),entryAux.getValue()});
 		}

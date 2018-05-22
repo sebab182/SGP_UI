@@ -22,7 +22,7 @@ public class Main {
 		m.addObserver(frmP);
 		
 		//Inicio ventanas
-		frmP.setVisible(true);;
+		frmP.setVisible(true);
 	}
 
 }

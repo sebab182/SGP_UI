@@ -18,7 +18,8 @@ public class CtrPrincipal implements Observer, ActionListener  {
 	private Modelo m;
 	private FrmPrincipal v;
 	
-	public CtrPrincipal(Modelo m, FrmPrincipal v) {
+	public CtrPrincipal(Modelo m, FrmPrincipal v)
+	{
 		this.v = v;
 		this.m = m;
 		m.addObserver(this);
@@ -34,10 +35,6 @@ public class CtrPrincipal implements Observer, ActionListener  {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource()==v.getBtn()) {
-			System.out.println("Hola");
-		}
-		
 		if(e.getSource()==v.getBtnSalir()) {
 			mostrarConfirmacionparaSalir();
 		}
@@ -50,6 +47,10 @@ public class CtrPrincipal implements Observer, ActionListener  {
 			mostrarVentanaPedidos();
 		}
 		
+		if(e.getSource()==v.getBtn()) {
+			m.resolverPedidos();
+			//m.notificarPedidosRechazados();
+		}
 	}
 	
 	private void mostrarVentanaPedidos() {
@@ -90,6 +91,7 @@ public class CtrPrincipal implements Observer, ActionListener  {
 		}
 		
 	}
+	
 
 	@Override
 	public void update(Observable o, Object arg) {

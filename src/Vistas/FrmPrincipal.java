@@ -96,11 +96,27 @@ public class FrmPrincipal extends JFrame implements Observer {
 		table.getTableHeader().setResizingAllowed(false);
 		table.getTableHeader().setReorderingAllowed(false);
 		scrollPane.setViewportView(table);
-		table.setModel(tableModel);
-		
+		//table.setModel(tableModel);
+		cargarTabla();
 		JScrollPane js=new JScrollPane(table);
 		scrollPane.setViewportView(js);	
-		update(null,null);
+	}
+	
+	public void cargarTabla() {
+		tableModel.fireTableDataChanged();
+		List<Pieza> piezas = m.getGestorStock().getStock();
+        SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        Object[][] datosFilas = new Object[piezas.size()][2];
+        Object nombresColumnas[] = {"Pieza", "Fecha de vencimiento"};
+        
+        for(int i=0; i<piezas.size();i++) {
+        	Pieza aux = piezas.get(i);
+            datosFilas[i][0] = aux.getTipoPieza().toString();
+            datosFilas[i][1] = fecha.format(aux.getFechaVencimiento());
+        }
+        DefaultTableModel tm = new DefaultTableModel(datosFilas, nombresColumnas);
+        table.setModel(tm);  	
 	}
 	
 	public JButton getBtn() {
@@ -137,14 +153,14 @@ public class FrmPrincipal extends JFrame implements Observer {
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		System.out.println("Llamando al update");
-		List<Pieza> p = m.getGestorStock().getStock();
+		cargarTabla();
+		/*List<Pieza> p = m.getGestorStock().getStock();
 		SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 		for(Pieza aux: p) {
 			tableModel.addRow(new Object[]{aux.getTipoPieza(), fecha.format(aux.getFechaVencimiento())});
 			table.setModel(tableModel);
 		}
-		
+		*/
 		
 	}
 }
