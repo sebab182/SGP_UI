@@ -7,10 +7,8 @@ import java.util.Map;
 import java.util.Observable;
 
 import javax.mail.MessagingException;
-
 import SGP.Datos.AbstractFactory;
 import SGP.Datos.DataSource;
-import SGP.Datos.DatosHardcodeados;
 import SGP.Email.Account;
 import SGP.Email.MailConcrete;
 import SGP.Email.MailSender;
@@ -22,58 +20,37 @@ import SGP.Pedidos.Pedido;
 import SGP.Stock.AgrupadordePiezas;
 import SGP.Stock.AnalizadordeVencimiento;
 import SGP.Stock.Distribuidor;
-import SGP.Stock.GestorStock;
 import SGP.Stock.GestorStockPiezas;
-import SGP.Stock.Pieza;
 import SGP.Stock.Tipo;
-
 
 public class Modelo extends Observable {
 	private GestorStockPiezas gestorStock;	
 	private GestorPedidosCarne gestorPedidos;
 	private Distribuidor distribuidor;
-	private AbstractFactory af;
+	private AbstractFactory datos;
 	
 
-	public Modelo() {
-		cargarDatos(); //Cargo los datos: Consultar problema con el abstract factory!
-		try {
-			cargarStock();
-			cargarPedidos(); //Se cargan los pedidos
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		notifyObservers(this);
-		
+	public Modelo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		cargarDatos();
+		cargarStock();
+		cargarPedidos();
 	}
 
-	public void cargarDatos() {
-		DataSource ds = new DataSource("datasource.txt");
-		try {
-			Class<?> cls = Class.forName(ds.getFactory());
-			AbstractFactory af = (AbstractFactory) cls.newInstance();
-		} catch (Exception e) {
-			System.out.println("Se produjo el siguiente error: "+e.getMessage());
-		}
-	}
-	
-	private void cargarPedidos() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public void cargarDatos() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		DataSource ds = new DataSource("datasource.txt");
 		Class<?> cls = Class.forName(ds.getFactory());
-		AbstractFactory af = (AbstractFactory) cls.newInstance();
+		datos = (AbstractFactory) cls.newInstance();
+	}
+	
+	private void cargarPedidos(){
 		gestorPedidos = new GestorPedidosCarne();
-		gestorPedidos.agregarPedidos(af.cargarPedidos());
+		gestorPedidos.agregarPedidos(datos.cargarPedidos());
 	}
 
-	public void cargarStock() throws ClassNotFoundException, InstantiationException, IllegalAccessException {		
-		DataSource ds = new DataSource("datasource.txt");
-		Class<?> cls = Class.forName(ds.getFactory());
-		AbstractFactory af = (AbstractFactory) cls.newInstance();
+	public void cargarStock(){		
 		gestorStock = new GestorStockPiezas();
-		((GestorStockPiezas) gestorStock).setCortesVaca(af.cargarConjuntoVaca());
-		gestorStock.agregarItems(af.cargarPiezas());
+		gestorStock.setCortesVaca(datos.cargarConjuntoVaca());
+		gestorStock.agregarItems(datos.cargarPiezas());
 		//Analizamos el vencimiento de las piezas
 		AnalizadordeVencimiento analizadorVencimiento = new AnalizadordeVencimiento(new Date());
 		analizadorVencimiento.analizarVencimientoPiezas(gestorStock);
@@ -83,17 +60,13 @@ public class Modelo extends Observable {
 		return gestorStock;
 	}
 	
-	public void exportarInforme(String nombre, String extension,String path) {
+	public void exportarInforme(String nombre, String extension,String path) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		ExporterSource es = new ExporterSource(extension);
-		try {
-			Class<?> cls = Class.forName(es.getFactory());
-			Exporter exportador = (Exporter)cls.newInstance();
-			exportador.setNombre(nombre);
-			exportador.setPath(path);
-			exportador.generarInforme(gestorStock);
-		} catch (Exception e) {
-			System.out.println("Se produjo el siguiente error"+e.getMessage());
-		}
+		Class<?> cls = Class.forName(es.getFactory());
+		Exporter exportador = (Exporter)cls.newInstance();
+		exportador.setNombre(nombre);
+		exportador.setPath(path);
+		exportador.generarInforme(gestorStock);
 	}
 	
 	public Map<Tipo, Double> cargarPedidosAgrupados() {
@@ -106,23 +79,20 @@ public class Modelo extends Observable {
 		return ap.agruparPedidos(pedidosAgrupados);
 	}
 
-	public void resolverPedidos() {
+	public void resolverPedidos() throws MessagingException {
 		distribuidor = new Distribuidor();
 		distribuidor.resolverPedidos(gestorPedidos.get_pedidos(), gestorStock);
-		System.out.println("Aceptados: "+distribuidor.getPedidosAceptados().size());
-		System.out.println("Rechazados: "+distribuidor.getPedidosRechazados().size());
 		
 		List<Pedido<Tipo>>eliminar = distribuidor.getPedidosAceptados();
 		for(Pedido<Tipo>pedido: eliminar) {
 			gestorPedidos.quitarPedido(pedido);
 		}
 		//notificarPedidosRechazados();
-		//¿Donde se hace la llamada al notificarPedidosRechazados? Aca o en el controlador?
-		//Se modifica el stock, le dijo a los observadores que se actualizen:
-		notifyObservers();
+		this.setChanged();
+		notifyObservers(this);
 		}
 	
-	public void notificarPedidosRechazados() {
+	public void notificarPedidosRechazados() throws MessagingException {
 		MailSender mc = new MailConcrete();
 		Account datosCuenta= new Account();
 		List<Pedido<Tipo>>listaPedidosRechazados = distribuidor.getPedidosRechazados();
@@ -130,11 +100,7 @@ public class Modelo extends Observable {
 			Local local = pedido.getLocal();
 			String asunto= "Notificación de pedido rechazado";
 			String mensaje= "Estimado gerente del local de "+local.getNombreLocal()+":\nSe le comunica que su pedido ha sido rechazado por falta de stock.\nSin más que agregar saluda atentamente. Equipo de distribución.";
-			try {
-				mc.enviarMail(datosCuenta, local.getEmail(), asunto, mensaje);
-			} catch (Exception e) {
-				System.out.println("Se produjo el siguiente error: "+e.getMessage());
-			}
+			mc.enviarMail(datosCuenta, local.getEmail(), asunto, mensaje);
 		}
 	}
 }
