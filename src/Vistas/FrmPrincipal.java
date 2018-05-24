@@ -25,7 +25,6 @@ import javax.swing.ListSelectionModel;
 public class FrmPrincipal extends JFrame implements Observer {
 
 	private static final long serialVersionUID = 1L;
-	private Modelo m;
 	private JPanel contentPane;
 	private	JButton btnResolverPedidos;
 	private JButton btnExportar;
@@ -34,13 +33,12 @@ public class FrmPrincipal extends JFrame implements Observer {
 	private JLabel lblNewLabel_1;
 	private JTable table;
 	private DefaultTableModel tableModel;
-	private int columnNumber = 2;
-
+	
 	public FrmPrincipal(Modelo m) {
 		setResizable(false);
 		m.addObserver(this);
-		this.m=m;
 		inicializarVista();
+		cargarTabla(m);
 	}
 
 	private void inicializarVista() {
@@ -96,27 +94,9 @@ public class FrmPrincipal extends JFrame implements Observer {
 		table.getTableHeader().setResizingAllowed(false);
 		table.getTableHeader().setReorderingAllowed(false);
 		scrollPane.setViewportView(table);
-		//table.setModel(tableModel);
-		cargarTabla();
+
 		JScrollPane js=new JScrollPane(table);
 		scrollPane.setViewportView(js);	
-	}
-	
-	public void cargarTabla() {
-		tableModel.fireTableDataChanged();
-		List<Pieza> piezas = m.getGestorStock().getStock();
-        SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-        Object[][] datosFilas = new Object[piezas.size()][2];
-        Object nombresColumnas[] = {"Pieza", "Fecha de vencimiento"};
-        
-        for(int i=0; i<piezas.size();i++) {
-        	Pieza aux = piezas.get(i);
-            datosFilas[i][0] = aux.getTipoPieza().toString();
-            datosFilas[i][1] = fecha.format(aux.getFechaVencimiento());
-        }
-        DefaultTableModel tm = new DefaultTableModel(datosFilas, nombresColumnas);
-        table.setModel(tm);  	
 	}
 	
 	public JButton getBtn() {
@@ -152,15 +132,31 @@ public class FrmPrincipal extends JFrame implements Observer {
 	}
 	
 	@Override
-	public void update(Observable arg0, Object arg1) {
-		cargarTabla();
-		/*List<Pieza> p = m.getGestorStock().getStock();
+	public void update(Observable o, Object m) {
+		cargarTabla(m);
+		/*List<Pieza> p = ((Modelo) m).getGestorStock().getStock();
 		SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 		for(Pieza aux: p) {
 			tableModel.addRow(new Object[]{aux.getTipoPieza(), fecha.format(aux.getFechaVencimiento())});
 			table.setModel(tableModel);
-		}
-		*/
-		
+		}*/		
 	}
+	
+	public void cargarTabla(Object m) {
+		tableModel.fireTableDataChanged();
+		List<Pieza> piezas = ((Modelo) m).getGestorStock().getStock();
+        SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+           
+        Object[][] datosFilas = new Object[piezas.size()][2];
+        Object nombresColumnas[] = {"Pieza", "Fecha de vencimiento"};
+        
+        for(int i=0; i<piezas.size();i++) {
+        	Pieza aux = piezas.get(i);
+            datosFilas[i][0] = aux.getTipoPieza().toString();
+            datosFilas[i][1] = fecha.format(aux.getFechaVencimiento());
+        }
+        DefaultTableModel tm = new DefaultTableModel(datosFilas, nombresColumnas);
+        table.setModel(tm);  	
+	}
+
 }

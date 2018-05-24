@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.mail.MessagingException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -40,7 +41,12 @@ public class CtrPrincipal implements Observer, ActionListener  {
 		}
 		
 		if(e.getSource()==v.getBtnExportar()) {
-			mostrarVentanaExportar();
+			try {
+				mostrarVentanaExportar();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 		if(e.getSource()==v.getBtnPedidos()) {
@@ -48,7 +54,12 @@ public class CtrPrincipal implements Observer, ActionListener  {
 		}
 		
 		if(e.getSource()==v.getBtn()) {
-			m.resolverPedidos();
+			try {
+				m.resolverPedidos();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			//m.notificarPedidosRechazados();
 		}
 	}
@@ -60,7 +71,7 @@ public class CtrPrincipal implements Observer, ActionListener  {
 		
 	}
 
-	private void mostrarVentanaExportar() {
+	private void mostrarVentanaExportar() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         JFileChooser fc = new JFileChooser();
         fc.setAcceptAllFileFilterUsed(false);
         FileNameExtensionFilter filtroTXT = new FileNameExtensionFilter("txt","txt");
@@ -90,6 +101,10 @@ public class CtrPrincipal implements Observer, ActionListener  {
 			 System.exit(0);
 		}
 		
+	}
+	
+	public void mostrarExcepcion(Exception e) {
+		JOptionPane.showMessageDialog(this.v, "Se produjo el siguiente error: "+e.getMessage());
 	}
 	
 
