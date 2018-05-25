@@ -10,11 +10,11 @@
   
   <repositories>
 		<!-- Resuelve contra S3 -->
-		<repository>
+		<!--repository>
 			<id>s3.release</id>
 			<name>AWS Release</name>
 			<url>s3://ungs.sgp/release</url>
-		</repository>
+		</repository-->
 
 		<repository>
 			<id>s3.snapshot</id>
@@ -44,12 +44,19 @@
   </properties>
   
   <build>
-	  <extensions>
-		  <extension>
+    <extensions>
+        <extension>
+            <groupId>org.springframework.build</groupId>
+            <artifactId>aws-maven</artifactId>
+            <version>5.0.0.RELEASE</version>
+        </extension>
+		
+		<extension>
 			<groupId>org.kuali.maven.wagons</groupId>
 			<artifactId>maven-s3-wagon</artifactId>
-		  </extension>
-	  </extensions>
+		</extension>
+    </extensions>
+
 	<plugins>  
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
