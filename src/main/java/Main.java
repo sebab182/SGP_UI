@@ -1,11 +1,7 @@
 package main.java;
 
-import java.util.Date;
-
 import Controlador.CtrPrincipal;
 import Modelo.Modelo;
-import SGP.Stock.Pieza;
-import SGP.Stock.Tipo;
 import Vistas.FrmPrincipal;
 
 public class Main {
