@@ -1,14 +1,12 @@
 package Controlador;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.mail.MessagingException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Modelo.Modelo;
@@ -24,7 +22,7 @@ public class CtrPrincipal implements Observer, ActionListener  {
 		this.v = v;
 		this.m = m;
 		m.addObserver(this);
-		agregarActionsListener();		
+		agregarActionsListener();
 	}
 
 	private void agregarActionsListener() {
@@ -32,6 +30,7 @@ public class CtrPrincipal implements Observer, ActionListener  {
 		v.getBtnSalir().addActionListener(this);
 		v.getBtnExportar().addActionListener(this);
 		v.getBtnPedidos().addActionListener(this);
+		v.getTxtFiltrar().addActionListener(this);
 	}
 
 	@Override
@@ -62,8 +61,15 @@ public class CtrPrincipal implements Observer, ActionListener  {
 			}
 			//m.notificarPedidosRechazados();
 		}
+		
+		if(e.getSource()==v.getTxtFiltrar()) {
+			String filtro = v.getTxtFiltrar().getText();
+			v.setFiltro(filtro);
+			v.cargarTabla(m, filtro);
+		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void mostrarVentanaPedidos() {
 		FrmPedidos fp = new FrmPedidos(m);
 		CtrPedidos cp = new CtrPedidos(fp);

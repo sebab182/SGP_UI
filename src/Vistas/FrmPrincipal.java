@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.JTextField;
 
 public class FrmPrincipal extends JFrame implements Observer {
 
@@ -33,12 +34,15 @@ public class FrmPrincipal extends JFrame implements Observer {
 	private JLabel lblNewLabel_1;
 	private JTable table;
 	private DefaultTableModel tableModel;
+	private JTextField txtFiltrar;
+	private String filtro;
 	
 	public FrmPrincipal(Modelo m) {
 		setResizable(false);
 		m.addObserver(this);
 		inicializarVista();
-		cargarTabla(m);
+		filtro="";
+		cargarTabla(m,filtro);
 	}
 
 	private void inicializarVista() {
@@ -97,6 +101,15 @@ public class FrmPrincipal extends JFrame implements Observer {
 
 		JScrollPane js=new JScrollPane(table);
 		scrollPane.setViewportView(js);	
+		
+		txtFiltrar = new JTextField();
+		txtFiltrar.setBounds(474, 57, 141, 20);
+		contentPane.add(txtFiltrar);
+		txtFiltrar.setColumns(10);
+		
+		JLabel lblFiltrar = new JLabel("Filtrar:");
+		lblFiltrar.setBounds(429, 60, 37, 14);
+		contentPane.add(lblFiltrar);
 	}
 	
 	public JButton getBtn() {
@@ -131,9 +144,25 @@ public class FrmPrincipal extends JFrame implements Observer {
 		this.btnPedidos = btnPedidos;
 	}
 	
+	public JTextField getTxtFiltrar() {
+		return txtFiltrar;
+	}
+
+	public void setTxtFiltrar(JTextField txtFiltrar) {
+		this.txtFiltrar = txtFiltrar;
+	}
+
+	public String getFiltro() {
+		return filtro;
+	}
+
+	public void setFiltro(String filtro) {
+		this.filtro = filtro;
+	}
+
 	@Override
 	public void update(Observable o, Object m) {
-		cargarTabla(m);
+		cargarTabla(m,"");
 		/*List<Pieza> p = ((Modelo) m).getGestorStock().getStock();
 		SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 		for(Pieza aux: p) {
@@ -142,9 +171,9 @@ public class FrmPrincipal extends JFrame implements Observer {
 		}*/		
 	}
 	
-	public void cargarTabla(Object m) {
+	public void cargarTabla(Object m, String f) {
 		tableModel.fireTableDataChanged();
-		List<Pieza> piezas = ((Modelo) m).getGestorStock().getStock();
+		List<Pieza> piezas = ((Modelo) m).filtrarPorNombrePieza(f);
         SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
            
         Object[][] datosFilas = new Object[piezas.size()][2];
@@ -158,5 +187,4 @@ public class FrmPrincipal extends JFrame implements Observer {
         DefaultTableModel tm = new DefaultTableModel(datosFilas, nombresColumnas);
         table.setModel(tm);  	
 	}
-
 }

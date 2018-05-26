@@ -21,6 +21,7 @@ import SGP.Stock.AgrupadordePiezas;
 import SGP.Stock.AnalizadordeVencimiento;
 import SGP.Stock.Distribuidor;
 import SGP.Stock.GestorStockPiezas;
+import SGP.Stock.Pieza;
 import SGP.Stock.Tipo;
 
 public class Modelo extends Observable {
@@ -58,6 +59,21 @@ public class Modelo extends Observable {
 
 	public GestorStockPiezas getGestorStock() {
 		return gestorStock;
+	}
+	
+	public List<Pieza>filtrarPorNombrePieza(String filtro){
+		List<Pieza>aux = gestorStock.getStock();
+		if(filtro.isEmpty()) {
+			return aux;
+		}
+		
+		List<Pieza>ret = new LinkedList<Pieza>();
+		for(Pieza p: aux) {
+			if(p.getTipoPieza().getNombreTipo().contains(filtro)) {
+				ret.add(p);
+			}
+		}
+		return ret;
 	}
 	
 	public void exportarInforme(String nombre, String extension,String path) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
