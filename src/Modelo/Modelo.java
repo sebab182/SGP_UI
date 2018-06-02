@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Observable;
 
 import javax.mail.MessagingException;
+
+import SGP.SistemaPedidosStub;
+import SGP.SistemaStockStub;
 import SGP.Datos.AbstractFactory;
 import SGP.Datos.DataSource;
 import SGP.Email.Account;
@@ -17,41 +20,38 @@ import SGP.Exportador.ExporterSource;
 import SGP.Pedidos.GestorPedidosCarne;
 import SGP.Pedidos.Local;
 import SGP.Pedidos.Pedido;
+import SGP.Pedidos.SistemaPedidosProxy;
 import SGP.Stock.AgrupadordePiezas;
 import SGP.Stock.AnalizadordeVencimiento;
 import SGP.Stock.Distribuidor;
 import SGP.Stock.GestorStockPiezas;
 import SGP.Stock.Pieza;
+import SGP.Stock.SistemaStockProxy;
 import SGP.Stock.Tipo;
 
 public class Modelo extends Observable {
+	private SistemaStockProxy sistemaStock;
+	private SistemaPedidosProxy sistemaPedidos;
 	private GestorStockPiezas gestorStock;	
 	private GestorPedidosCarne gestorPedidos;
 	private Distribuidor distribuidor;
-	private AbstractFactory datos;
-	
 
 	public Modelo() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		cargarDatos();
 		cargarStock();
 		cargarPedidos();
 	}
-
-	public void cargarDatos() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		DataSource ds = new DataSource("datasource.txt");
-		Class<?> cls = Class.forName(ds.getFactory());
-		datos = (AbstractFactory) cls.newInstance();
-	}
 	
 	private void cargarPedidos(){
+		sistemaPedidos = new SistemaPedidosStub();
 		gestorPedidos = new GestorPedidosCarne();
-		gestorPedidos.agregarPedidos(datos.cargarPedidos());
+		gestorPedidos.agregarPedidos(sistemaPedidos.cargarPedidos());
 	}
 
 	public void cargarStock(){		
+		sistemaStock = new SistemaStockStub();
 		gestorStock = new GestorStockPiezas();
-		gestorStock.setCortesVaca(datos.cargarConjuntoVaca());
-		gestorStock.agregarItems(datos.cargarPiezas());
+		gestorStock.setCortesVaca(sistemaStock.cargarConjuntoVaca());
+		gestorStock.agregarItems(sistemaStock.cargarPiezas());
 		//Analizamos el vencimiento de las piezas
 		AnalizadordeVencimiento analizadorVencimiento = new AnalizadordeVencimiento(new Date());
 		analizadorVencimiento.analizarVencimientoPiezas(gestorStock);

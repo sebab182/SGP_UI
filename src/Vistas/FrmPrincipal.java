@@ -176,13 +176,14 @@ public class FrmPrincipal extends JFrame implements Observer {
 		List<Pieza> piezas = ((Modelo) m).filtrarPorNombrePieza(f);
         SimpleDateFormat fecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
            
-        Object[][] datosFilas = new Object[piezas.size()][2];
-        Object nombresColumnas[] = {"Pieza", "Fecha de vencimiento"};
+        Object[][] datosFilas = new Object[piezas.size()][3];
+        Object nombresColumnas[] = {"Pieza", "Fecha de elaboración", "Fecha de vencimiento"};
         
         for(int i=0; i<piezas.size();i++) {
         	Pieza aux = piezas.get(i);
             datosFilas[i][0] = aux.getTipoPieza().toString();
-            datosFilas[i][1] = fecha.format(aux.getFechaVencimiento());
+            datosFilas[i][1] = fecha.format(aux.getFechaElaboracion());
+            datosFilas[i][2] = fecha.format(aux.getFechaVencimiento());
         }
         DefaultTableModel tm = new DefaultTableModel(datosFilas, nombresColumnas);
         table.setModel(tm);  	
