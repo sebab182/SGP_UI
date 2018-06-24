@@ -17,11 +17,11 @@ import SGP.Email.MailConcrete;
 import SGP.Email.MailSender;
 import SGP.Exportador.Exporter;
 import SGP.Exportador.ExporterSource;
+import SGP.Pedidos.AgrupadorPiezasPedidos;
 import SGP.Pedidos.GestorPedidosCarne;
 import SGP.Pedidos.Local;
 import SGP.Pedidos.Pedido;
 import SGP.Pedidos.SistemaPedidosProxy;
-import SGP.Stock.AgrupadordePiezas;
 import SGP.Stock.AnalizadordeVencimiento;
 import SGP.Stock.Distribuidor;
 import SGP.Stock.GestorStockPiezas;
@@ -85,13 +85,13 @@ public class Modelo extends Observable {
 		exportador.generarInforme(gestorStock);
 	}
 	
-	public Map<Tipo, Double> cargarPedidosAgrupados() {
+	public Map<Tipo, Integer> cargarPedidosAgrupados() {
 		List<Pedido<Tipo>>pedidosAgrupados= new LinkedList<Pedido<Tipo>>();
 		HashSet<Pedido<Tipo>>pedidos=gestorPedidos.get_pedidos();
 		for(Pedido<Tipo>p: pedidos) {
 			pedidosAgrupados.add(p);
 		}
-		AgrupadordePiezas ap = new AgrupadordePiezas();
+		AgrupadorPiezasPedidos ap = new AgrupadorPiezasPedidos();
 		return ap.agruparPedidos(pedidosAgrupados);
 	}
 
